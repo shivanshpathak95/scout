@@ -1,8 +1,8 @@
 import nodemailer from 'nodemailer';
 
-const transporter = nodemailer.createTransprt({
+const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
+    port: Number(process.env.SMTP_PORT),
     secure: false,
     auth: {
         user: process.env.EMAIL_USER,
@@ -25,5 +25,18 @@ export const sendMail = async (to,subject,text,html) => {
         console.error('Error sending email:', error);
         throw error;
     }
-} 
+}
 
+export const sendOtpEmail = async (to, otp) => {
+    const subject = 'Verify your email';
+    const text = `Your verification code is ${otp}. It expires in 10 minutes.`;
+    const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: auto;">
+            <h2>Verify your email</h2>
+            <p>Use the code below to verify your account. This code expires in 10 minutes.</p>
+            <p style="font-size: 32px; font-weight: bold; letter-spacing: 6px;">${otp}</p>
+            <p>If you did not request this, you can safely ignore this email.</p>
+        </div>
+    `;
+    return sendMail(to, subject, text, html);
+}

@@ -21,7 +21,12 @@ const userSchema= new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        minlength: [4, 'Password must be 4 character long']
+        minlength: [4, 'Password must be 4 character long'],
+        select: false
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
     },
 },
 {
